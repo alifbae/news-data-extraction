@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 
 __author__ = "Ali Fawad"
 
-class Crawler():
+class LATimesCrawler():
 	def __init__(self, Url):
 		self.url = Url
 
@@ -54,22 +54,33 @@ class Crawler():
 		contentFilter = (BeautifulSoup(str(
 			contentSoup.find_all('p'))).get_text()).encode('ascii',errors='ignore')
 
-		clean1 = contentFilter.replace("\n", '')
-		clean2 = clean1.replace('[, , ', '')
-		clean3 = clean2.replace("., ", ". ")
-		clean4 = clean3.replace(". , ", ". ")
-		clean5 = clean4.encode('string-escape').replace("\\'", '')
-		clean6 = clean5.replace('[, ', '[')
-		clean7 = clean6.replace('[[', '[')
-		return clean7
+		filter1 = contentFilter.replace("\n", '')
+		filter2 = filter1.replace('[, , ', '')
+		filter3 = filter2.replace("., ", ". ")
+		filter4 = filter3.replace(". , ", ". ")
+		filter5 = filter4.encode('string-escape').replace("\\'", '')
+		filter6 = filter5.replace('[, ', '[')
+		filter7 = filter6.replace('[[', '[')
+		filter8 = filter7.replace("\t", '')
+
+		if '___' in filter8: #if true, get content till start of footer
+			stringEnd = filter8.find("___")
+			return filter8[:stringEnd]
+		else:
+			return filter8
 
 	def titleFilter(self, pageSoup):
 		return BeautifulSoup(str(pageSoup.find_all(
 			'h1', {'class': 'trb_article_title_text'}))).get_text().encode('ascii',errors='ignore')
 
 	def authorFilter(self, pageSoup):
-		return BeautifulSoup(str(pageSoup.find_all(
+		author = BeautifulSoup(str(pageSoup.find_all(
 			'a', {'class': 'trb_bylines_name_author_a'}))).get_text().encode('ascii',errors='ignore')
+
+		if author == '[]':
+			return "NULL"
+		else:
+			return author
 
 	def dateFilter(self, pageSoup):
 		dateFilter = pageSoup.find_all('time', {"datetime":True})
@@ -86,11 +97,15 @@ class Crawler():
 			f.write(json.dumps(content)+'\n')
 
 def main():
-	test = Crawler("http://www.latimes.com/nation/politics/la-na-latino-voters-20150910-story.html")
-	testBuffer = test.getHtmlBuffer()
-	testData = test.extractContentFromHtml(testBuffer)
-	print testData
-	test.dumpToJsonFile(testData, 'testDump.json', 'a+')
-
-
+	articleCounter = 0
+	with open("latimes-articleLinks.txt") as f:
+		for link in f:
+			print (">> " + link)
+			crawlerObj = LATimesCrawler(link)
+			htmlBuffer = crawlerObj.getHtmlBuffer()
+			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
+			crawlerObj.dumpToJsonFile(articleData, 
+				'articleData/latimes-data-'+str(articleCounter)+".json", 'w+')
+			articleCounter += 1
+			print articleData	
 main()

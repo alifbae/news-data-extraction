@@ -98,12 +98,17 @@ class SeattleTimesCrawler():
 		with open(filename, filemode) as f:
 			f.write(json.dumps(content)+'\n')
 
+
 def main():
-	test = SeattleTimesCrawler("http://www.seattletimes.com/seattle-news/transportation/qa-a-guide-to-using-i-405s-new-express-toll-lanes/")
-	testBuffer = test.getHtmlBuffer()
-	testData = test.extractContentFromHtml(testBuffer)
-	print testData
-	test.dumpToJsonFile(testData, 'testDump.json', 'a+')
-
-
+	articleCounter = 0
+	with open("articleLinks.txt") as f:
+		for link in f:
+			print (">> " + link)
+			crawlerObj = SeattleTimesCrawler(link)
+			htmlBuffer = crawlerObj.getHtmlBuffer()
+			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
+			crawlerObj.dumpToJsonFile(articleData, 
+				'articleData/seattletimes-data-'+str(articleCounter)+".json", 'a+')
+			articleCounter += 1
+			print articleData	
 main()
