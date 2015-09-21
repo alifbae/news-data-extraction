@@ -35,8 +35,8 @@ for filePath in filePathList:
 ##### Currently data is available for:
 - LA Times
 - Seattle Times
+- Houston Chronicle
 
 ##### Work in progress:
 - Philly
 - Chicago Tribune
-- Houston Chronicle
