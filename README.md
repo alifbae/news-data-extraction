@@ -36,7 +36,7 @@ for filePath in filePathList:
 - LA Times
 - Seattle Times
 - Houston Chronicle
+- Chicago Tribune
 
 ##### Work in progress:
 - Philly
-- Chicago Tribune

@@ -47,7 +47,10 @@ class ChicagoTribuneCrawler():
 			articleInfo['Title'] = self.titleFilter(pageSoup)
 			articleInfo['Content'] = self.contentFilter(pageSoup)
 			articleInfo['Date'] = self.dateFilter(pageSoup)
-			return articleInfo
+			if (articleInfo['Date'] == -1):
+				return -1
+			else:
+				return articleInfo
 
 
 	def contentFilter(self, pageSoup):
@@ -102,35 +105,36 @@ class ChicagoTribuneCrawler():
 
 	def dateFilter(self, pageSoup):
 		dateFilter = pageSoup.find_all('time', {"datetime":True})
+		dateLineString = ""
 		for date in dateFilter:
 			dateLineString = date['datetime'][:10] #remove timestamp
 			break #only get published date, not updated date
 
-		dateLineFormated = str(datetime.datetime.strptime(
-			dateLineString, "%Y-%m-%d").date()).replace('-','')
-
-		return dateLineFormated
+		if not dateLineString:
+			return -1
+		else:
+			dateLineFormated = str(datetime.datetime.strptime(
+				dateLineString, "%Y-%m-%d").date()).replace('-','')
+			return dateLineFormated
 
 	def dumpToJsonFile(self, content, filename, filemode):
 		with open(filename, filemode) as f:
 			f.write(json.dumps(content)+'\n')
 
 
-
-
 ##############################################################################
-
 def main():
-	links = []
-	with open("testLinks.txt") as f:
-		for line in f:
-			links.append(line)
-	for link in links:
-		test = ChicagoTribuneCrawler(link)
-		testBuffer = test.getHtmlBuffer()
-		testData = test.extractContentFromHtml(testBuffer)
-		print testData
-		test.dumpToJsonFile(testData, 'testDump.json', 'a+')
+	articleCounter = 0
+	with open("chicago-tribune-articleLinks.txt") as f:
+		for link in f:
+			print (">> " + link)
+			crawlerObj = ChicagoTribuneCrawler(link)
+			htmlBuffer = crawlerObj.getHtmlBuffer()
+			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
+			crawlerObj.dumpToJsonFile(articleData, 'articleData/chicago-tribune--data-'+str(articleCounter)+".json", 'w+')
+			crawlerObj.dumpToJsonFile(articleData,'chicago-tribune-data-all.json', 'a+')
+			articleCounter += 1
+			print articleData	
 
 
 main()
