@@ -3,11 +3,9 @@
 import json
 import os
 
-dirPath = "articleData/"
-
-paths = os.listdir(dirPath)
-
 def makeSingleJson():
+	dirPath = "articleData/"
+	paths = os.listdir(dirPath)
 	for filePath in paths:
 		print "articleData/"+filePath
 		with open(dirPath+filePath) as f:
@@ -30,6 +28,6 @@ def makeJsonFiles():
 		articleCounter += 1
 	return
 
-# makeSingleJson()
+makeSingleJson()
 
-makeJsonFiles()
+# makeJsonFiles()

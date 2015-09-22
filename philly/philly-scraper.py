@@ -66,15 +66,6 @@ class PhillyCrawler():
 		contentSoup = BeautifulSoup(str(pageSoup.find_all(
 		'div', {'class': 'body-content'})))
 
-		# contentFilter = (BeautifulSoup(str(contentSoup.find_all(
-		# 	'p'))).get_text()).encode('ascii',errors='ignore')
-
-		# # if content is null, check if html is of second type
-		# if contentFilter == '[]':
-		# 	print("Content of Type 2")
-		contentSoup = BeautifulSoup(str(pageSoup.find_all(
-			'div', {'class': 'area-main-center-w-rightsky'})))
-
 		contentFilter = (BeautifulSoup(str(contentSoup.find_all(
 			'p'))).get_text()).encode('ascii',errors='ignore')
 
@@ -133,13 +124,19 @@ class PhillyCrawler():
 		with open(filename, filemode) as f:
 			f.write(json.dumps(content)+'\n')
 
+
 def main():
-	with open("leftover.txt") as f:
+	articleCounter = 0
+	with open("philly-articleLinks.txt") as f:
 		for link in f:
 			print (">> " + link)
 			crawlerObj = PhillyCrawler(link)
 			htmlBuffer = crawlerObj.getHtmlBuffer()
 			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
-			# crawlerObj.dumpToJsonFile(articleData, 'philly-tax-data.json', 'a+')
+			# crawlerObj.dumpToJsonFile(articleData, 'articleData/latimes-data-'+str(articleCounter)+".json", 'w+')
+			crawlerObj.dumpToJsonFile(articleData,'philly-data-all.json', 'a+')
+			articleCounter += 1
 			print articleData	
+
+
 main()
