@@ -60,20 +60,20 @@ class ChicagoTribuneCrawler():
 		contentFilter = (BeautifulSoup(str(
 			contentSoup.find_all('p'))).get_text()).encode('ascii',errors='ignore')
 
-		filter1 = contentFilter.replace("\n", '')
-		# filter2 = filter1.replace('[, , ', '')
-		# filter3 = filter2.replace("., ", ". ")
-		# filter4 = filter3.replace(". , ", ". ")
-		filter2 = filter1.encode('string-escape').replace("\\'", '')
-		# filter6 = filter5.replace('[, ', '[')
-		# filter7 = filter6.replace('[[', '[')
-		filter3 = filter2.replace("\t", '')
 
-		if '___' in filter3: #if true, get content till start of footer
-			stringEnd = filter3.find("___")
-			return filter3[:stringEnd]
+		filter1 = contentFilter.replace("., ", ". , ") # Add Space after new paragraph
+		filter2 = filter1.replace("\n", '')
+		filter3 = filter2.replace('[, ', '[')
+		filter4 = filter3.encode('string-escape').replace("\\'", '')
+		filter5 = filter4.replace('[[', '[')
+		filter6 = filter5.replace("\t", '')
+
+		if '___' in filter6: #if true, get content till start of footer
+			stringEnd = filter6.find("___")
+			return filter6[:stringEnd]
 		else:
-			return filter3
+			return filter6
+
 
 
 	def titleFilter(self, pageSoup):
@@ -131,7 +131,7 @@ def main():
 			crawlerObj = ChicagoTribuneCrawler(link)
 			htmlBuffer = crawlerObj.getHtmlBuffer()
 			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
-			crawlerObj.dumpToJsonFile(articleData,'chicago-tribune-data-all-v2.json', 'a+')
+			crawlerObj.dumpToJsonFile(articleData,'chicago-tribune-data-all-v3.json', 'a+')
 			articleCounter += 1
 			print articleData	
 			
