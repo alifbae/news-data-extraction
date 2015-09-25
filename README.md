@@ -36,6 +36,25 @@ for filePath in filePathList:
 			author = articleData['Author'] # use a check for "NULL" author if you wish
 ```
 
+### Tokenizing for paragraphs and sentences:
+In order to split the content into paragraphs use the python split() method on the content tag as shown below:
+```python
+with open(jsonFilePath) as f:
+	for line in f:
+		articleData = json.loads(line)
+		articleContent = articleData["Content"]
+
+		articleParagraphs = articleContent.split("., ") # Delimiter for the new paragraph
+
+		paragraphCounter = 1
+		for paragraph in articleParagraphs:
+			print "Paragraph " + str(paragraphCounter) + " >> " + paragraph
+			paragraphCounter += 1
+
+		print '\n'
+		paragraphCounter = 1
+```
+
 ##### Currently data is available for:
 - LA Times
 - Seattle Times
