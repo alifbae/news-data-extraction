@@ -55,19 +55,19 @@ class SeattleTimesCrawler():
 			contentSoup.find_all('p'))).get_text()).encode('ascii',errors='ignore')
 
 		filter1 = contentFilter.replace("\n", '')
-		filter2 = filter1.replace('[, , ', '')
-		filter3 = filter2.replace("., ", ". ")
-		filter4 = filter3.replace(". , ", ". ")
-		filter5 = filter4.encode('string-escape').replace("\\'", '')
-		filter6 = filter5.replace('[, ', '[')
-		filter7 = filter6.replace('[[', '[')
-		filter8 = filter7.replace("\t", '')
+		# filter2 = filter1.replace('[, , ', '')
+		# filter3 = filter2.replace("., ", ". ")
+		# filter4 = filter3.replace(". , ", ". ")
+		filter2 = filter1.encode('string-escape').replace("\\'", '')
+		# filter6 = filter5.replace('[, ', '[')
+		# filter7 = filter6.replace('[[', '[')
+		filter3 = filter2.replace("\t", '')
 
-		if '___' in filter8: #if true, get content till start of footer
-			stringEnd = filter8.find("___")
-			return filter8[:stringEnd]
+		if '___' in filter3: #if true, get content till start of footer
+			stringEnd = filter3.find("___")
+			return filter3[:stringEnd]
 		else:
-			return filter8
+			return filter3
 
 	def titleFilter(self, pageSoup):
 		title = BeautifulSoup(str(pageSoup.find_all(
@@ -107,8 +107,7 @@ def main():
 			crawlerObj = SeattleTimesCrawler(link)
 			htmlBuffer = crawlerObj.getHtmlBuffer()
 			articleData = crawlerObj.extractContentFromHtml(htmlBuffer)
-			crawlerObj.dumpToJsonFile(articleData, 
-				'articleData/seattletimes-data-'+str(articleCounter)+".json", 'a+')
+			crawlerObj.dumpToJsonFile(articleData,'seattle-times-data-all-v2.json', 'a+')
 			articleCounter += 1
 			print articleData	
 main()
