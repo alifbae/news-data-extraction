@@ -44,7 +44,7 @@ with open(jsonFilePath) as f:
 		articleData = json.loads(line)
 		articleContent = articleData["Content"]
 
-		articleParagraphs = articleContent.split("., ") # Delimiter for the new paragraph
+		articleParagraphs = articleContent.split(". , ") # Delimiter for the new paragraph
 
 		paragraphCounter = 1
 		for paragraph in articleParagraphs:
