@@ -21,12 +21,12 @@ def makeJsonFiles():
 	articleData = []
 	articleCounter = 0
 
-	with open("chicago-tribune-data-all.json") as f:
+	with open("chicago-tribune-data-all-v3.json") as f:
 		for line in f:
 			articleData.append(json.loads(line))
 
 	for data in articleData:
-		with open(("articleData/chicago-tribune-article-"+str(articleCounter)+".json"), 'w+') as g:
+		with open(("articleData-chicago-tribune/chicago-tribune-article-"+str(articleCounter)+".json"), 'w+') as g:
 			g.write(json.dumps(data))
 		articleCounter += 1
 	return

@@ -18,16 +18,16 @@ def makeJsonFiles():
 	articleData = []
 	articleCounter = 0
 
-	with open("latimes-data-all.json") as f:
+	with open("latimes-data-all-v3.json") as f:
 		for line in f:
 			articleData.append(json.loads(line))
 
 	for data in articleData:
-		with open(("articleData2/latimes-article-"+str(articleCounter)+".json"), 'w+') as g:
+		with open(("articleData-la-times/chicago-tribune-article-"+str(articleCounter)+".json"), 'w+') as g:
 			g.write(json.dumps(data))
 		articleCounter += 1
 	return
 
-makeSingleJson()
+# makeSingleJson()
 
-# makeJsonFiles()
+makeJsonFiles()
